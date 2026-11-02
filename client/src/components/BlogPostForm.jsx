@@ -1,27 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
-function BlogPostForm() {
+function BlogPostForm({ editingPost }) {
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
 
+  useEffect(() => {
+    if (editingPost) {
+      setAuthor(editingPost.author);
+      setTitle(editingPost.title);
+      setCategory(editingPost.category);
+      setContent(editingPost.content);
+    }
+  }, [editingPost]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/posts",
-        {
+      let response;
+
+      if (editingPost) {
+        response = await axios.put(
+          `http://localhost:3000/api/posts/${editingPost.id}`,
+          {
+            author,
+            title,
+            category,
+            content,
+          },
+        );
+      } else {
+        response = await axios.post("http://localhost:3000/api/posts", {
           author,
           title,
           category,
           content,
-        }
-      );
+        });
+      }
 
       console.log(response.data);
+
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -43,10 +65,7 @@ function BlogPostForm() {
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-      >
+      <select value={category} onChange={(e) => setCategory(e.target.value)}>
         <option value="">Select a category</option>
         <option value="Tech">Tech</option>
         <option value="Lifestyle">Lifestyle</option>
@@ -60,7 +79,7 @@ function BlogPostForm() {
       />
 
       <button type="submit">
-        Publish Post
+        {editingPost ? "Update Post" : "Publish Post"}
       </button>
     </form>
   );

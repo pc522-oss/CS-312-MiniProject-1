@@ -5,6 +5,7 @@ import BlogPostForm from "./components/BlogPostForm";
 
 function App() {
   const [posts, setPosts] = useState([]);
+  const [editingPost, setEditingPost] = useState(null);
 
   useEffect(() => {
     axios
@@ -18,14 +19,14 @@ function App() {
   }, []);
 
   return (
-  <div>
-    <h1>React Blog Frontend</h1>
+    <div>
+      <h1>React Blog Frontend</h1>
 
-    <BlogPostForm />
+      <BlogPostForm editingPost={editingPost} />
 
-    <PostList posts={posts} />
-  </div>
-);
+      <PostList posts={posts} setEditingPost={setEditingPost} />
+    </div>
+  );
 }
 
 export default App;

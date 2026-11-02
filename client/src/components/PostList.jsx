@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function PostList({ posts }) {
+function PostList({ posts, setEditingPost }) {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/posts/${id}`);
@@ -19,6 +19,8 @@ function PostList({ posts }) {
           <p>{post.content}</p>
           <p>By: {post.author}</p>
           <p>Category: {post.category}</p>
+
+          <button onClick={() => setEditingPost(post)}>Edit</button>
 
           <button onClick={() => handleDelete(post.id)}>Delete</button>
         </div>

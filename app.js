@@ -96,6 +96,32 @@ app.delete("/api/posts/:id", (req, res) => {
   });
 });
 
+app.put("/api/posts/:id", (req, res) => {
+  const postId = Number(req.params.id);
+
+  const index = posts.findIndex((post) => post.id === postId);
+
+  if (index === -1) {
+    return res.status(404).json({
+      success: false,
+      message: "Post not found",
+    });
+  }
+
+  posts[index] = {
+    ...posts[index],
+    author: req.body.author,
+    title: req.body.title,
+    content: req.body.content,
+    category: req.body.category,
+  };
+
+  res.json({
+    success: true,
+    post: posts[index],
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
