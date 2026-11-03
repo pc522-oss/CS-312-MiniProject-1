@@ -14,15 +14,41 @@ function PostList({ posts, setEditingPost }) {
   return (
     <>
       {posts.map((post) => (
-        <div key={post.id}>
-          <h2>{post.title}</h2>
-          <p>{post.content}</p>
-          <p>By: {post.author}</p>
-          <p>Category: {post.category}</p>
+        <div className="post-card" key={post.id}>
+          <div className="post-card-inner">
+            <h2 className="post-title">{post.title}</h2>
 
-          <button onClick={() => setEditingPost(post)}>Edit</button>
+            <p className="post-body">{post.content}</p>
 
-          <button onClick={() => handleDelete(post.id)}>Delete</button>
+            <div className="post-meta-row">
+              <div>
+                <p className="author-name">
+                  By: {post.author}
+                </p>
+
+                <p className="post-date">
+                  Category: {post.category}
+                </p>
+              </div>
+
+              <div>
+                <button
+                  className="btn-edit-card"
+                  onClick={() => setEditingPost(post)}
+                >
+                  Edit
+                </button>
+
+                <button
+                  className="btn-del-card"
+                  onClick={() => handleDelete(post.id)}
+                  style={{ marginLeft: "8px" }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       ))}
     </>

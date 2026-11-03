@@ -13,6 +13,7 @@ app.use(cors());
 app.set("view engine", "ejs");
 
 let posts = [];
+let users = [];
 
 app.get("/", (req, res) => {
   const filter = req.query.filter;
@@ -119,6 +120,55 @@ app.put("/api/posts/:id", (req, res) => {
   res.json({
     success: true,
     post: posts[index],
+  });
+});
+
+app.post("/api/signup", (req, res) => {
+  const { user_id, password, name } = req.body;
+
+  const userExists = users.find(
+    (user) => user.user_id === user_id
+  );
+
+  if (userExists) {
+    return res.json({
+      success: false,
+      message: "User already exists",
+    });
+  }
+
+  users.push({
+    user_id,
+    password,
+    name,
+  });
+
+  res.json({
+    success: true,
+    message: "Signup successful",
+  });
+});
+
+app.post("/api/signin", (req, res) => {
+  const { user_id, password } = req.body;
+
+  const user = users.find(
+    (u) =>
+      u.user_id === user_id &&
+      u.password === password
+  );
+
+  if (!user) {
+    return res.json({
+      success: false,
+      message: "Invalid credentials",
+    });
+  }
+
+  res.json({
+    success: true,
+    message: "Signin successful",
+    user,
   });
 });
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-function BlogPostForm({ editingPost }) {
+function BlogPostForm({ editingPost, currentUser }) {
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -15,6 +15,12 @@ function BlogPostForm({ editingPost }) {
       setContent(editingPost.content);
     }
   }, [editingPost]);
+
+  useEffect(() => {
+    if (!editingPost && currentUser) {
+      setAuthor(currentUser.name);
+    }
+  }, [currentUser, editingPost]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,8 +56,9 @@ function BlogPostForm({ editingPost }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="create-card" onSubmit={handleSubmit}>
       <input
+        className="form-control"
         type="text"
         placeholder="Your name"
         value={author}
@@ -59,26 +66,41 @@ function BlogPostForm({ editingPost }) {
       />
 
       <input
+        className="form-control"
         type="text"
         placeholder="Post title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <select value={category} onChange={(e) => setCategory(e.target.value)}>
+      <select
+        className="form-control"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+      >
         <option value="">Select a category</option>
         <option value="Tech">Tech</option>
         <option value="Lifestyle">Lifestyle</option>
         <option value="Education">Education</option>
       </select>
 
-      <textarea
-        placeholder="What's on your mind?"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
+      <div className="editor-section">
+        <label className="form-label">Content</label>
 
-      <button type="submit">
+        <textarea
+          className="form-control editor-textarea"
+          placeholder="What's on your mind?"
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+
+            e.target.style.height = "auto";
+            e.target.style.height = `${e.target.scrollHeight}px`;
+          }}
+        />
+      </div>
+
+      <button className="btn-publish" type="submit">
         {editingPost ? "Update Post" : "Publish Post"}
       </button>
     </form>
