@@ -72,6 +72,7 @@ app.get("/api/posts", (req, res) => {
 app.post("/api/posts", (req, res) => {
   const newPost = {
     id: Date.now(),
+    creatorId: req.body.creatorId,
     author: req.body.author,
     title: req.body.title,
     content: req.body.content,
@@ -89,6 +90,22 @@ app.post("/api/posts", (req, res) => {
 
 app.delete("/api/posts/:id", (req, res) => {
   const postId = Number(req.params.id);
+
+  const post = posts.find((post) => post.id === postId);
+
+  if (!post) {
+    return res.status(404).json({
+      success: false,
+      message: "Post not found",
+    });
+  }
+
+  if (post.creatorId !== req.body.user_id) {
+    return res.status(403).json({
+      success: false,
+      message: "Not authorized",
+    });
+  }
 
   posts = posts.filter((post) => post.id !== postId);
 
@@ -109,6 +126,13 @@ app.put("/api/posts/:id", (req, res) => {
     });
   }
 
+  if (posts[index].creatorId !== req.body.user_id) {
+    return res.status(403).json({
+      success: false,
+      message: "Not authorized",
+    });
+  }
+
   posts[index] = {
     ...posts[index],
     author: req.body.author,
@@ -126,9 +150,7 @@ app.put("/api/posts/:id", (req, res) => {
 app.post("/api/signup", (req, res) => {
   const { user_id, password, name } = req.body;
 
-  const userExists = users.find(
-    (user) => user.user_id === user_id
-  );
+  const userExists = users.find((user) => user.user_id === user_id);
 
   if (userExists) {
     return res.json({
@@ -153,9 +175,7 @@ app.post("/api/signin", (req, res) => {
   const { user_id, password } = req.body;
 
   const user = users.find(
-    (u) =>
-      u.user_id === user_id &&
-      u.password === password
+    (u) => u.user_id === user_id && u.password === password,
   );
 
   if (!user) {

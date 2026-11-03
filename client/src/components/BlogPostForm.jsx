@@ -36,6 +36,7 @@ function BlogPostForm({ editingPost, currentUser }) {
             title,
             category,
             content,
+            user_id: currentUser?.user_id,
           },
         );
       } else {
@@ -44,6 +45,7 @@ function BlogPostForm({ editingPost, currentUser }) {
           title,
           category,
           content,
+          creatorId: currentUser?.user_id,
         });
       }
 

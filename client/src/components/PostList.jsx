@@ -1,9 +1,13 @@
 import axios from "axios";
 
-function PostList({ posts, setEditingPost }) {
+function PostList({ posts, setEditingPost, currentUser }) {
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/posts/${id}`);
+      await axios.delete(`http://localhost:3000/api/posts/${id}`, {
+        data: {
+          user_id: currentUser?.user_id,
+        },
+      });
 
       window.location.reload();
     } catch (error) {
@@ -22,13 +26,9 @@ function PostList({ posts, setEditingPost }) {
 
             <div className="post-meta-row">
               <div>
-                <p className="author-name">
-                  By: {post.author}
-                </p>
+                <p className="author-name">By: {post.author}</p>
 
-                <p className="post-date">
-                  Category: {post.category}
-                </p>
+                <p className="post-date">Category: {post.category}</p>
               </div>
 
               <div>

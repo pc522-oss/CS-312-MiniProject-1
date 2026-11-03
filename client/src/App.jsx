@@ -172,7 +172,11 @@ function App() {
             <p>No posts have been created yet.</p>
           </div>
         ) : (
-          <PostList posts={posts} setEditingPost={setEditingPost} />
+          <PostList
+            posts={posts}
+            setEditingPost={setEditingPost}
+            currentUser={currentUser}
+          />
         )}
       </div>
 
